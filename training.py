@@ -35,6 +35,5 @@ for vote in vote_list:
     else:
         pass
 
-
 index = vote_list.index(highest)
 print(f"highest voted post is '{title_list[index]}',{link_list[index]}'with {vote_list[index]} votes")
