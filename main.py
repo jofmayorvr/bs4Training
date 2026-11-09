@@ -1,18 +1,40 @@
+from os import link
+
 from bs4 import BeautifulSoup
+import requests
 
-with open("website.html") as file:
-    html = file.read()
+response = requests.get('https://news.ycombinator.com/news')
+
+soup = BeautifulSoup(response.text, 'html.parser')
+
+titles = soup.select('.titleline > a')
+
+votes = soup.select('.subline .score ')
+
+title_list = []
+vote_list = []
+link_list = []
+
+for vote in votes:
+    a = vote.text.split()[0]
+    vote_list.append(int(a))
+
+for t in titles:
+    title_list.append(t.text)
+    link_list.append(t.get("href"))
+
+print(title_list)
+print(vote_list)
+print(link_list)
+
+highest = 0
+
+for vote in vote_list:
+    if vote > highest:
+        highest = vote
+    else:
+        pass
 
 
-soup = BeautifulSoup(html, "html.parser")
-
-#print(soup.title.string)
-#print(soup.prettify())
-
-for p in soup.find_all('a'):
-    print(p.get("href"))
-
-
-heading = soup.find(name = 'h3', class_ = "heading")
-
-print(heading)
+index = vote_list.index(highest)
+print(f"highest voted post is '{title_list[index]}',{link_list[index]}'with {vote_list[index]} votes")
